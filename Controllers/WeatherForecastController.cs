@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WeatherForecast.Contracts;
 using WeatherForecast.Processors;
@@ -11,11 +12,11 @@ namespace WeatherForecast.Controllers
     public class WeatherForecastController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<List<ForecastResult>> Get()
+        public async Task<ActionResult<List<ForecastResult>>> Get()
         {
             try
             {
-                var result = WeatherProcessor.GetForecast();
+                var result = await WeatherProcessor.GetForecast();
                 if (result == null)
                 {
                     return NotFound();

@@ -18,10 +18,10 @@ namespace WeatherForecast.Processors
         private const string WebApiPath = @"http://api.openweathermap.org/data/2.5/group?id={0}&APPID=43e305856ff7bf71c05b88353b942565&units=metric";
         private static readonly HttpClient Client = new HttpClient();
 
-        public static IEnumerable<ForecastResult> GetForecast()
+        public static async Task<IEnumerable<ForecastResult>> GetForecast()
         {
             var cities = CityRepository.GetCityList();
-            var response = GetForecastAsync(cities).Result;
+            var response = await GetForecastAsync(cities);
             var result = GetForecastResult(cities, response);
             return result;
         }
@@ -37,7 +37,7 @@ namespace WeatherForecast.Processors
             var parameters = string.Join(",", ids);
             var requestUri = string.Format(WebApiPath, parameters);
             var streamTask = await Client.GetStreamAsync(requestUri);
-            var response = await JsonSerializer.DeserializeAsync<ForecastResponse>(streamTask).ConfigureAwait(false);
+            var response = await JsonSerializer.DeserializeAsync<ForecastResponse>(streamTask);
             return response;
         }
 
